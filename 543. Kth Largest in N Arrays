@@ -1,0 +1,59 @@
+class Node{
+    public int value, from_id, index;
+    public Node(int _v, int _id, int _i){
+        this.value = _v;
+        this.from_id = _id;
+        this.index = _i;
+    }
+}
+
+public class Solution {
+    /**
+     * @param arrays a list of array
+     * @param k an integer
+     * @return an integer, K-th largest element in N arrays
+     */
+    public int KthInArrays(int[][] arrays, int k) {
+        // Write your code here
+        Queue<Node> queue = new PriorityQueue<Node>(k, new Comparator<Node>(){
+            public int compare(Node n1, Node n2){
+                return n2.value - n1.value;
+            }
+        });
+        
+        int n = arrays.length;
+        for(int i = 0; i < n; i ++){
+            Arrays.sort(arrays[i]);
+            
+            if(arrays[i].length > 0){
+                int from_id = i;
+                int index = arrays[i].length - 1;
+                int value = arrays[i][index];
+                queue.add(new Node(value, from_id, index));
+            }
+        }
+        
+        for(int i = 0; i < k; i ++){
+            Node temp = queue.poll();
+            int value = temp.value;
+            int index = temp.index;
+            int from_id = temp.from_id;
+            
+            if(i == k - 1){
+                return value;
+            }
+            
+            if(index > 0){
+                index --;
+                value = arrays[from_id][index];
+                queue.add(new Node(value, from_id, index));
+            }
+        }
+        
+        return -1;
+    }
+}
+
+
+//把n个一维数组先排序，之后保持每个一维数组里的最大元素在maxheap里边，这样就OK了
+//这道题能算easy吗。。。靠
