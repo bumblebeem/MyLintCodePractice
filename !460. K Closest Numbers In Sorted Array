@@ -1,0 +1,110 @@
+//这题首先得想到二分法。直接用一个TreeMap或者HashMap是要超时的
+//其次仍然有很多细节要注意，调试了很多次
+public class Solution {
+    /**
+     * @param A an integer array
+     * @param target an integer
+     * @param k a non-negative integer
+     * @return an integer array
+     */
+    public static int[] kClosestNumbers(int[] A, int target, int k) {
+        ArrayList<Integer> res = new ArrayList<Integer>();
+        int[] array_res = new int[k];
+        int original_k = k;
+        if(k == 0){
+            return array_res;
+        }
+        int near_target = 0;
+        int start = 0, end = A.length - 1;
+        int mid = 0;
+        while(start + 1 < end){
+            mid = (end - start) / 2 + start;
+            if(A[mid] < target){
+                start = mid;
+            } else if(A[mid] > target){
+                end = mid;
+            } else {
+                near_target = mid;
+                break;
+            }
+        }
+        if(near_target != mid){
+            if(Math.abs(A[start] - target) > Math.abs(A[end] - target)){
+                near_target = end;
+            } else {
+                near_target = start;
+            }
+        }
+        res.add(A[near_target]);
+        k --;
+        int left = near_target - 1;
+        int right = near_target + 1;
+        while(k > 0 && left >= 0 && right < A.length){
+            k --;
+            if(Math.abs(A[left] - target) > Math.abs(A[right] - target)){
+                res.add(A[right]);
+                right ++;
+            } else if(Math.abs(A[left] - target) < Math.abs(A[right] - target)) {
+                res.add(A[left]);
+                left --;
+            } else {
+                res.add(A[left]);
+                left --;
+            }
+        }
+        if(left == -1){
+            while(k != 0 && right < A.length){
+                k --;
+                res.add(A[right ++]);
+            }
+        } else if(right == A.length){
+            while(k != 0 && left >= 0){
+                k --;
+                res.add(A[left --]);
+            }
+        }
+        for(int i = 0; i < original_k; i ++){
+            array_res[i] = res.get(i);
+        }
+        return array_res;
+    }
+}
+
+
+//这里也附上超时的解法
+public class Solution {
+    /**
+     * @param A an integer array
+     * @param target an integer
+     * @param k a non-negative integer
+     * @return an integer array
+     */
+    public int[] kClosestNumbers(int[] A, int target, int k) {
+        int[] res = new int[k];
+        TreeMap<Integer, ArrayList<Integer>> treemap = new TreeMap<Integer, ArrayList<Integer>>();
+        for(int i = 0; i < A.length; i ++){
+            int difference = Math.abs(target - A[i]);
+            if(treemap.containsKey(difference)){
+                ArrayList<Integer> temp = treemap.remove(difference);
+                temp.add(A[i]);
+                treemap.put(difference, temp);
+            } else {
+                ArrayList<Integer> newList = new ArrayList<Integer>();
+                newList.add(A[i]);
+                treemap.put(difference, newList);
+            }
+        }
+        int index = 0;
+        Set set = treemap.entrySet();
+        Iterator it = set.iterator();
+        while(it.hasNext() && index < k){
+            Map.Entry mentry = (Map.Entry)it.next();
+            ArrayList<Integer> cur = (ArrayList)mentry.getValue();
+            Collections.sort(cur);
+            for(int j = 0; j < cur.size() && index < k; j ++){
+                res[index ++] = cur.get(j);
+            }
+        }
+        return res;
+    }
+}
