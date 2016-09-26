@@ -23,7 +23,6 @@ public class Solution {
     int[] dy = {1, 0};
      
     public int kthSmallest(int[][] matrix, int k) {
-        // write your code here
         if(matrix == null || matrix.length == 0){
             return -1;
         }
