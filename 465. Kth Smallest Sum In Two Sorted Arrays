@@ -1,0 +1,61 @@
+class Pair{
+    public int x, y, sum;
+    Pair(int x, int y, int sum){
+        this.x = x;
+        this.y = y;
+        this.sum = sum;
+    }
+}
+
+public class Solution {
+    /**
+     * @param A an integer arrays sorted in ascending order
+     * @param B an integer arrays sorted in ascending order
+     * @param k an integer
+     * @return an integer
+     */
+    public int kthSmallestSum(int[] A, int[] B, int k) {
+        int[] dx = new int[]{0, 1};
+        int[] dy = new int[]{1, 0};
+        boolean[][] visited = new boolean[A.length][B.length];
+        Comparator<Pair> minComparator = new Comparator<Pair>(){
+            public int compare(Pair a, Pair b){
+                return a.sum - b.sum;
+            }  
+        };
+        PriorityQueue<Pair> minHeap = new PriorityQueue<Pair>(A.length + B.length, minComparator);
+        minHeap.add(new Pair(0, 0, A[0] + B[0]));
+        visited[0][0] = true;
+        
+        for(int i = 0; i < k - 1; i ++){
+            Pair cur = minHeap.poll();
+            for(int j = 0; j < 2; j ++){
+                int next_x = cur.x + dx[j];
+                int next_y = cur.y + dy[j];
+                Pair next_Pair = new Pair(next_x, next_y, 0);
+                if(next_x < A.length && next_y < B.length && visited[next_x][next_y] == false){
+                    next_Pair.sum = A[next_x] + B[next_y];
+                    minHeap.add(next_Pair);
+                    visited[next_x][next_y] = true;
+                }
+            }
+        }
+        return minHeap.peek().sum;
+    }
+}
+
+
+//更加OO的方法参见如下链接：
+//http://www.jiuzhang.com/solutions/kth-smallest-sum-in-two-sorted-arrays/
+//*如果想使用这种方法，一定要注意必须override HashSet的contains方法，否则判断的只是两个对象是否是同一个，
+//而我们需要判断的是两个对象的值是否一样！！
+
+//Mark助教回答如下：
+//这个问题主要是set在判断是否contains上出了问题
+//Pair A = new Pair(0, 0, 100);
+//Pair B = new Pair(0,0, 100);
+//
+//A和 B 是两个不同的对象，那么A和B是不等的。
+//所以visited.add(A), 此时判断visited.contains(B) 显然是False的，所以数据被加重复了，visited没有起到想要的效果。
+
+//解决方案是给Pair重写equals和hashCode方法
