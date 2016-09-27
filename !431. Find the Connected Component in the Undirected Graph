@@ -1,0 +1,146 @@
+//1. 普通搜索
+/**
+ * Definition for Undirected graph.
+ * class UndirectedGraphNode {
+ *     int label;
+ *     ArrayList<UndirectedGraphNode> neighbors;
+ *     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+ * };
+ */
+public class Solution {
+    /**
+     * @param nodes a array of Undirected graph node
+     * @return a connected set of a Undirected graph
+     */
+    public List<List<Integer>> connectedSet(ArrayList<UndirectedGraphNode> nodes) {
+        HashMap<UndirectedGraphNode, Boolean> visited = new HashMap<UndirectedGraphNode, Boolean>();
+        for(UndirectedGraphNode node : nodes){
+            visited.put(node, false);
+        }
+        
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        
+        for(UndirectedGraphNode node : nodes){
+            if(visited.get(node) == false){
+                bfs(node, res, visited);
+            }
+        }
+        
+        return res;
+    }
+    
+    public void bfs(UndirectedGraphNode node, List<List<Integer>> res, Map<UndirectedGraphNode, Boolean> visited){
+        ArrayList<Integer> connected_part = new ArrayList<Integer>();
+        Queue<UndirectedGraphNode> queue = new LinkedList<UndirectedGraphNode>();
+        queue.add(node);
+        visited.put(node, true);
+        while(!queue.isEmpty()){
+            UndirectedGraphNode cur = queue.poll();
+            connected_part.add(cur.label);
+            for(UndirectedGraphNode neighbor : cur.neighbors){
+                if(visited.get(neighbor) == false){
+                    visited.put(neighbor, true);
+                    queue.add(neighbor);
+                }
+            }
+        }
+        Collections.sort(connected_part);
+        res.add(connected_part);
+    }
+}
+
+
+//2. 并查集
+/**
+ * Definition for Undirected graph.
+ * class UndirectedGraphNode {
+ *     int label;
+ *     ArrayList<UndirectedGraphNode> neighbors;
+ *     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+ * };
+ */
+public class Solution {
+    /**
+     * @param nodes a array of Undirected graph node
+     * @return a connected set of a Undirected graph
+     */
+    class UnionFind{
+        HashMap<Integer, Integer> father = new HashMap<Integer, Integer>();
+    
+        UnionFind(HashSet<Integer> hashset){
+            for(Integer i : hashset){
+                father.put(i, i);
+            }
+        }
+    
+        int find(int x){
+            int parent = father.get(x);
+            while(parent != father.get(parent)){
+                parent = father.get(parent);
+            }
+            return parent;
+        }
+    
+        int compressed_find(int x){
+            int parent = father.get(x);
+            while(parent != father.get(parent)){
+            parent = father.get(parent);
+            }
+            while(x != father.get(x)){
+                int temp = father.get(x);
+                father.put(x, parent);
+                x = temp;
+            }
+            return parent;
+        }
+    
+        void union(int x, int y){
+            int father_x = find(x);
+            int father_y = find(y);
+            if(father_x != father_y){
+                father.put(father_x, father_y);
+            }
+        }
+    } 
+    
+    public List<List<Integer>> connectedSet(ArrayList<UndirectedGraphNode> nodes) {
+        HashSet<Integer> hashset = new HashSet<Integer>();
+        for(UndirectedGraphNode node : nodes){
+            hashset.add(node.label);
+            for(UndirectedGraphNode neighbor : node.neighbors){
+                hashset.add(neighbor.label);
+            }
+        }
+        UnionFind uf = new UnionFind(hashset);
+        
+        for(UndirectedGraphNode node : nodes){
+            for(UndirectedGraphNode neighbor : node.neighbors){
+                int cur_father = uf.find(node.label);
+                int neighbor_father = uf.find(neighbor.label);
+                if(cur_father != neighbor_father){
+                    uf.union(cur_father, neighbor_father);
+                }
+            }
+        }
+        
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        HashMap<Integer, List<Integer>> helper = new HashMap<Integer, List<Integer>>();
+        for(UndirectedGraphNode node : nodes){
+            int father = uf.find(node.label);
+            if(!helper.containsKey(father)){
+                helper.put(father, new ArrayList<Integer>());
+            }
+            List<Integer> temp = helper.get(father);
+            temp.add(node.label);
+            helper.put(father, temp);
+        }
+        for(List<Integer> cur : helper.values()){
+            Collections.sort(cur);
+            res.add(cur);
+        }
+        return res;
+    }
+}
+
+
+//http://www.jiuzhang.com/solutions/find-the-connected-component-in-the-undirected-graph/
