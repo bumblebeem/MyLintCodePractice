@@ -1,0 +1,93 @@
+/**
+ * Definition for a point.
+ * class Point {
+ *     int x;
+ *     int y;
+ *     Point() { x = 0; y = 0; }
+ *     Point(int a, int b) { x = a; y = b; }
+ * }
+ */
+public class Solution {
+    /**
+     * @param n an integer
+     * @param m an integer
+     * @param operators an array of point
+     * @return an integer array
+     */
+    int convertToId(int x, int y, int m){
+        return x * m + y;
+    }
+    
+    class UnionFind{
+        HashMap<Integer, Integer> father = new HashMap<Integer, Integer>();
+        
+        UnionFind(int n, int m){
+            for(int i = 0; i < n; i ++){
+                for(int j = 0; j < m; j ++){
+                    int id = convertToId(i, j, m);
+                    father.put(id, id);
+                }
+            }
+        }
+        
+        int find(int x){
+            int parent = father.get(x);
+            while(parent != father.get(parent)){
+                parent = father.get(parent);
+            }
+            return parent;
+        }
+        
+        void union(int x, int y){
+            int father_x = find(x);
+            int father_y = find(y);
+            if(father_x != father_y){
+                father.put(father_x, father_y);
+            }
+        }
+    }
+    
+    public List<Integer> numIslands2(int n , int m, Point[] operations){
+        List<Integer> res = new ArrayList<Integer>();
+        if(operations == null || operations.length == 0){
+            return res;
+        }
+        
+        int[] dx = new int[]{1, -1, 0, 0};
+        int[] dy = new int[]{0, 0, 1, -1};
+        boolean[][] islands = new boolean[n][m];
+        
+        UnionFind uf = new UnionFind(n, m);
+        int count = 0;
+        
+        for(int i = 0; i < operations.length; i ++){
+            count ++;
+            int x = operations[i].x;
+            int y = operations[i].y;
+            if(islands[x][y] == false){
+                islands[x][y] = true;
+                int id = convertToId(x, y, m);
+                for(int j = 0; j < 4; j ++){
+                    int next_x = x + dx[j];
+                    int next_y = y + dy[j];
+                    if(next_x >= 0 && next_x < n && next_y >= 0 && next_y  < m && islands[next_x][next_y] == true){
+                        int next_id = convertToId(next_x, next_y, m);
+                        int fa = uf.find(id);
+                        int next_fa = uf.find(next_id);
+                        if(fa != next_fa){
+                            count --;
+                            uf.union(id, next_id);
+                        }
+                    }
+                }
+            }
+            res.add(count);
+        }
+        
+        return res;
+    }
+}
+
+
+//*line 64 & 78的理解：64行先假设每次操作都新增一个岛屿，之后第78行检查如果这个新增的岛屿上下左右本身已经有岛屿，
+//那么之前的假设就不成立，需要再减少岛屿
