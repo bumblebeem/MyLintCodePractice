@@ -1,0 +1,65 @@
+//1. O(nlogn) solution
+public class Solution {
+    /**
+     * @param A: Given an integer array
+     * @return: void
+     */
+    public void heapify(int[] A) {
+        for(int i = 0; i < A.length; i ++){
+            siftUp(A, i);
+        }
+    }
+    
+    public void siftUp(int[] A, int i){
+        while(i > 0){
+            int parent_index = (i - 1) / 2;
+            if(A[parent_index] <= A[i]){
+                return;
+            }
+            
+            int temp = A[parent_index];
+            A[parent_index] = A[i];
+            A[i] = temp;
+            
+            i = parent_index;
+        }
+    }
+}
+
+//注意15行求parent_index的表达式！
+
+
+//2. O(n) solution
+public class Solution {
+    /**
+     * @param A: Given an integer array
+     * @return: void
+     */
+    public void heapify(int[] A) {
+        for(int i = A.length / 2; i >= 0; i --){
+            siftDown(A, i);
+        }
+    }
+    
+    public void siftDown(int[] A, int index){
+        while(2*index + 1 < A.length){
+            int smallest = index;
+            
+            if(2*index + 1 < A.length && A[2*index + 1] < A[smallest]){
+                smallest = 2*index + 1;
+            }
+            if(2*index + 2 < A.length && A[2*index + 2] < A[smallest]){
+                smallest = 2*index + 2;
+            }
+            
+            if(smallest == index){
+                break;
+            }
+            int temp = A[smallest];
+            A[smallest] = A[index];
+            A[index] = temp;
+            
+            index = smallest;
+        }
+    }
+}
