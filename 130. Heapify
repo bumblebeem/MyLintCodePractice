@@ -63,3 +63,10 @@ public class Solution {
         }
     }
 }
+
+
+//http://stackoverflow.com/questions/9755721/how-can-building-a-heap-be-on-time-complexity
+//Above link explains why siftDown is preferable than siftUp.
+//In a heap, only one node is at the top whereas half the nodes lie in the bottom layer. 
+//So it shouldn't be too surprising that if we have to apply an operation to every node, 
+//we would prefer siftDown over siftUp.
