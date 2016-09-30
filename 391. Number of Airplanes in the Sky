@@ -1,0 +1,59 @@
+/**
+ * Definition of Interval:
+ * public classs Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this.start = start;
+ *         this.end = end;
+ *     }
+ */
+class Point {
+    int time;
+    int flag;
+    
+    Point (int time, int flag){
+        this.time = time;
+        this.flag = flag;
+    }
+    
+    public static Comparator<Point> comparator = new Comparator<Point>(){
+        public int compare(Point p1, Point p2){
+            if(p1.time == p2.time){
+                return p1.flag - p2.flag;
+            } else {
+                return p1.time - p2.time;
+            }
+        }
+    };
+}
+
+class Solution {
+    /**
+     * @param intervals: An interval array
+     * @return: Count of airplanes are in the sky.
+     */
+    public int countOfAirplanes(List<Interval> airplanes) { 
+        int max = 0;
+        ArrayList<Point> helper = new ArrayList<Point>();
+        for(Interval i : airplanes){
+            helper.add(new Point(i.start, 2));
+            helper.add(new Point(i.end, 1));
+        }
+        
+        Collections.sort(helper, Point.comparator);
+        int count = 0;
+        for(Point p : helper){
+            if(p.flag == 2){
+                count ++;
+            } else if(p.flag == 1){
+                count --;
+            }
+            max = Math.max(max, count);
+        }
+        
+        return max;
+    }
+}
+
+
+//注意如何根据需求override Java的Comparator，没太明白为什么20行必须要加上public才行。。
