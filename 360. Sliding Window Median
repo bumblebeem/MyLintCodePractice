@@ -1,0 +1,59 @@
+public class Solution {
+    /**
+     * @param nums: A list of integers.
+     * @return: The median of the element inside the window at each moving.
+     */
+    public ArrayList<Integer> medianSlidingWindow(int[] nums, int k) {
+        ArrayList<Integer> res = new ArrayList<Integer>();
+        if(nums == null || nums.length == 0){
+            return res;
+        }
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<Integer>(1, 
+            new Comparator<Integer>(){
+                public int compare(Integer a, Integer b){
+                    return b - a;
+                }
+            }
+        );
+        PriorityQueue<Integer> minHeap = new PriorityQueue<Integer>();
+        
+        for(int i = 0; i < nums.length; i ++){
+            //add new elements into one of the heaps
+            if(maxHeap.isEmpty() || nums[i] <= maxHeap.peek()){
+                maxHeap.add(nums[i]);
+            } else {
+                minHeap.add(nums[i]);
+            }
+            
+            //remove element outside the window
+            if(i - k >= 0){
+                if(nums[i - k] <= maxHeap.peek()){
+                    maxHeap.remove(nums[i - k]);
+                } else {
+                    minHeap.remove(nums[i - k]);
+                }
+            }
+            
+            //resize two heaps, make sure maxHeap contains one more element if k is odd
+            while(maxHeap.size() > minHeap.size() + 1){
+                minHeap.add(maxHeap.poll());
+            }
+            while(minHeap.size() > maxHeap.size()){
+                maxHeap.add(minHeap.poll());
+            }
+            
+            //get median and add it to res
+            if(i >= k - 1){
+                res.add(maxHeap.peek());
+            }
+        }
+        return res;
+    }
+}
+
+//https://wxx5433.gitbooks.io/interview-preparation/content/part_ii_leetcode_lintcode/heap/sliding_window_median.html
+
+
+//如果改用HashHeap，可以优化29-35行的remove操作，从O(n - k)到O(1)
+//http://www.jiuzhang.com/solutions/sliding-window-median/
+//但是HashHeap的实现很费劲啊。。
