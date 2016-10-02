@@ -1,0 +1,41 @@
+public class Solution {
+    /**
+     * @param matrix an integer array of n * m matrix
+     * @param k an integer
+     * @return the maximum number
+     */
+    public int maxSlidingWindow2(int[][] matrix, int k) {
+        if(matrix == null){
+            return 0;
+        }
+        int col = matrix[0].length;
+        int row = matrix.length;
+        if(row < k || col < k){
+            return 0;
+        }
+        int[][] sum = new int[row + 1][col + 1];
+        // for(int i = 0; i <= row; i ++){
+        //     sum[i][0] = 0;
+        // }
+        // for(int j = 0; j <= col; j ++){
+        //     sum[0][j] = 0;
+        // }
+        for(int i = 1; i <= row; i ++){
+            for(int j = 1; j <= col; j ++){
+                sum[i][j] = matrix[i - 1][j - 1] + 
+                    sum[i - 1][j] + sum[i][j - 1] - sum[i - 1][j - 1];
+            }
+        }
+        int max = Integer.MIN_VALUE;
+        for(int i = k; i <= row; i ++){
+            for(int j = k; j <= col; j ++){
+                int cur_sum = sum[i][j] - sum[i - k][j] - sum[i][j - k] + sum[i - k][j - k];
+                max = Math.max(max, cur_sum);
+            }
+        }
+        return max;
+    }
+}
+
+
+//这里注意利用一个二维数组sum储存从(0, 0)到(i, j)的全部数字之和的技巧！这正是sub array sum的思路！
