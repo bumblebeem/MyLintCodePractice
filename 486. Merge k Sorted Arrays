@@ -1,0 +1,42 @@
+class Num{
+    int x;
+    int y;
+    int val;
+    
+    Num(int x, int y, int val){
+        this.x = x;
+        this.y = y;
+        this.val = val;
+    }
+}
+
+public class Solution {
+    /**
+     * @param arrays k sorted integer arrays
+     * @return a sorted array
+     */
+    public List<Integer> mergekSortedArrays(int[][] arrays) {
+        List<Integer> res = new ArrayList<Integer>();
+        if(arrays == null || arrays.length == 0 || arrays[0].length == 0){
+            return res;
+        }
+        PriorityQueue<Num> minHeap = new PriorityQueue<Num>(arrays.length,
+            new Comparator<Num>(){
+                public int compare(Num a, Num b){
+                    return a.val - b.val;
+                }
+            }
+        );
+        for(int i = 0; i < arrays.length; i ++){
+            minHeap.add(new Num(i, 0, arrays[i][0]));
+        }
+        while(!minHeap.isEmpty()){
+            Num curMin = minHeap.poll();
+            res.add(curMin.val);
+            if(arrays[curMin.x].length > curMin.y + 1){
+                minHeap.add(new Num(curMin.x, curMin.y + 1, arrays[curMin.x][curMin.y + 1]));
+            }
+        }
+        return res;
+    }
+}
