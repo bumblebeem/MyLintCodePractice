@@ -1,0 +1,60 @@
+public class Solution {
+    /**
+     * @param A an integer array
+     * @param target an integer
+     * @param k a non-negative integer
+     * @return an integer array
+     */
+    public int[] kClosestNumbers(int[] A, int target, int k) {
+        int[] result = new int[k];
+        
+        if(A == null || A.length == 0 || k > A.length){
+            return result;
+        }
+        
+        int index = findNearestIndex(A, target);
+        
+        int start = index;
+        int end = index + 1;
+        for(int i = 0; i < k; i ++){
+            if(start < 0){
+                result[i] = A[end ++];
+            } else if (end >= A.length){
+                result[i] = A[start --];
+            } else {    // A[start] <= target <= A[end], so don't need Math.abs
+                if(target - A[start] < A[end] - target){
+                    result[i] = A[start --];
+                } else if(target - A[start] > A[end] - target){
+                    result[i] = A[end ++];
+                } else {
+                    result[i] = A[start --];
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    // find the index of first element smaller or equal than target
+    private int findNearestIndex(int[] A, int target){
+        int start = 0, end = A.length - 1;
+        while(start + 1 < end){
+            int mid = (end - start) / 2 + start;
+            if(A[mid] > target){
+                end = mid;
+            } else if(A[mid] < target){
+                start = mid;
+            } else {
+                end = mid;
+            }
+        }
+        if(Math.abs(A[start] - target) <= Math.abs(A[end] - target)){
+            return start;
+        } else {
+            return end;
+        }
+    }
+}
+
+
+//先用二分法找到与target最接近的下标，之后再输出k个最接近的数
