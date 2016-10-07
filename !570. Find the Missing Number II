@@ -1,0 +1,42 @@
+public class Solution {
+    public boolean flag = false;
+    public int ans = -1;
+    
+    public int findMissing2(int n, String str) {
+        HashSet<Integer> set = new HashSet<Integer>();
+        dfs(str, set, 0, n);
+    	return ans;
+    }
+    
+    private void dfs(String str, HashSet<Integer> set, int index, int target){
+        if (index >= str.length() || flag) {
+            if(!flag){
+                for(int k = 1; k <= target; k++) {
+                    if(!set.contains(k)){
+                        ans = k;
+                    }
+                }
+            }
+            flag = true;
+            return;
+        }
+        
+        int sum = str.charAt(index) - '0';
+        int j = index;
+        if(sum == 0){
+            return;
+        }
+        while(sum <= target){
+            if(!set.contains(sum)){
+                set.add(sum);
+                dfs(str, set, j + 1, target);
+                set.remove(sum);
+            }
+            j ++;
+            if(j >= str.length()){
+                break;
+            }
+            sum = sum * 10 + (str.charAt(j) - '0');
+        }
+    }
+}
