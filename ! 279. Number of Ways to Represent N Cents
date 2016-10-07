@@ -1,0 +1,18 @@
+public class Solution {
+    public int waysNCents(int n) {
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        int[] cents = new int[]{1, 5, 10, 25};
+        for(int i = 0; i < cents.length; i ++){
+            for(int j = 1; j <= n; j ++){
+                if(j - cents[i] >= 0){
+                    dp[j] += dp[j - cents[i]];
+                }
+            }
+        }
+        return dp[n];
+    }
+}
+
+
+//外层循环是硬币面值，内层循环才是总金额；理解的很不到位啊。。
