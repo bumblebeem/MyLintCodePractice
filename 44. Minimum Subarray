@@ -1,0 +1,19 @@
+public class Solution {
+    public int minSubArray(ArrayList<Integer> nums) {
+        if(nums == null || nums.size() == 0){
+            return 0;
+        }
+        int prefixSum = 0;
+        int max = 0;
+        int min = Integer.MAX_VALUE;
+        for(int i = 0; i < nums.size(); i ++){
+            prefixSum += nums.get(i);
+            min = Math.min(min, prefixSum - max);
+            max = Math.max(max, prefixSum);
+        }
+        return min;
+    }
+}
+
+
+// 和Maximum Subarray思路完全一样啊。。
