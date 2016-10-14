@@ -1,0 +1,24 @@
+public class Solution {
+    public int twoSumCloset(int[] nums, int target) {
+        Arrays.sort(nums);
+        int i = 0, j = nums.length - 1;
+        int difference = Integer.MAX_VALUE;
+        while(i < j){
+            if(nums[i] + nums[j] > target){
+                if(nums[i] + nums[j] - target < difference){
+                    difference = nums[i] + nums[j] - target;
+                }
+                j --;
+            } else {
+                if(target - nums[i] - nums[j] < difference){
+                    difference = target - nums[i] - nums[j];
+                }
+                i ++;
+            }
+        }
+        return difference;
+    }
+}
+
+
+// 重点是想到Two Pointers和排序，其他的都好说。。
