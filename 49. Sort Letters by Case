@@ -6,10 +6,10 @@ public class Solution {
         int lower = 0;
         int upper = chars.length - 1;
         while(lower < upper){
-            while(lower < upper && isLowerCase(chars[lower])){
+            while(lower < upper && Character.isLowerCase(chars[lower])){
                 lower ++;
             }
-            while(lower < upper && !isLowerCase(chars[upper])){
+            while(lower < upper && Character.isUpperCase(chars[upper])){
                 upper --;
             }
             if(lower < upper){
@@ -21,12 +21,5 @@ public class Solution {
                 upper --;
             }
         }
-    }
-    
-    private boolean isLowerCase(char c){
-        if(c >= 'a' && c <= 'z'){
-            return true;
-        }
-        return false;
     }
 }
