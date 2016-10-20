@@ -1,0 +1,44 @@
+class Solution {
+    public void sortColors2(int[] colors, int k) {
+        int count = 0;
+        int start = 0;
+        int end = colors.length - 1;
+        while(count < k){
+            int min = Integer.MAX_VALUE;
+            int max = Integer.MIN_VALUE;
+            for(int i = start; i <= end; i ++){
+                min = Math.min(min, colors[i]);
+                max = Math.max(max, colors[i]);
+            }
+            
+            int left = start;
+            int right = end;
+            int cur = left;
+            while(cur <= right){
+                if(colors[cur] == min){
+                    swap(colors, left, cur);
+                    cur ++;
+                    left ++;
+                } else if (colors[cur] > min && colors[cur] < max){
+                    cur ++;
+                } else {    //colors[cur] == max
+                    swap(colors, right, cur);
+                    right --;
+                }
+            }
+            
+            count += 2;
+            start = left;
+            end = right;
+        }
+    }
+    
+    private void swap(int[] a, int x, int y){
+        int temp = a[x];
+        a[x] = a[y];
+        a[y] = temp;
+    }
+}
+
+
+// Sort Colors的follow-up，核心代码一致；31，32行的赋值不是left + 1和right - 1,加强理解！
