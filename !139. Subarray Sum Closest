@@ -1,0 +1,57 @@
+class Prefix{
+    int prefixSum;
+    int index;
+    Prefix(int prefixSum, int index){
+        this.prefixSum = prefixSum;
+        this.index = index;
+    }
+}
+
+public class Solution {
+    public int[] subarraySumClosest(int[] nums) {
+        int[] res = new int[2];
+        if(nums == null || nums.length == 0){
+            return res;
+        }
+        
+        if(nums.length == 1){
+            res[0] = 0;
+            res[1] = 0;
+            return res;
+        }
+        
+        Prefix[] prefix = new Prefix[nums.length + 1];
+        prefix[0] = new Prefix(0, 0);
+        for(int i = 1; i < prefix.length; i ++){
+            prefix[i] = new Prefix(prefix[i - 1].prefixSum + nums[i - 1], i);
+        }
+        
+        Arrays.sort(prefix, new Comparator<Prefix>(){
+            public int compare(Prefix a, Prefix b){
+                return a.prefixSum - b.prefixSum;
+            }
+        });
+        
+        int min = Integer.MAX_VALUE;
+        for(int i = 1; i < prefix.length; i ++){
+            int cur = prefix[i].prefixSum - prefix[i - 1].prefixSum;
+            if(cur < min){
+                min = cur;
+                int[] temp = new int[]{prefix[i - 1].index - 1, prefix[i].index - 1};
+                Arrays.sort(temp);
+                res[0] = temp[0] + 1;
+                res[1] = temp[1];
+            }
+        }
+        
+        return res;
+    }
+}
+
+
+// 还是利用prefix sum的思路解决
+// http://www.code123.cc/docs/leetcode-notes/integer_array/subarray_sum_closest.html
+
+// 注意下标的处理，一开始26行new Prefix类的时候存的index比nums实际的index大1，所以在40行取出来的时候都要先减1
+// 之后注意42，43行，把prefix的下标转化回去，前边那个index还应该加一，画图理解！
+
