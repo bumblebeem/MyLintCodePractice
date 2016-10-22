@@ -1,0 +1,19 @@
+class Solution {
+    /**
+     * @param key: A String you should hash
+     * @param HASH_SIZE: An integer
+     * @return an integer
+     */
+    public int hashCode(char[] key,int HASH_SIZE) {
+        long hashcode = 0;
+        for(int i = 0; i < key.length; i ++){
+            hashcode = (33 * hashcode + (int)(key[i])) % HASH_SIZE;
+        }
+        return (int)hashcode;
+    }
+};
+
+
+// 为了防止溢出，需要做到以下两点：
+// 1.第8行使用long
+// 2.第10行每次计算完就取余，而不是等到最后再取余
