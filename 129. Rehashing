@@ -1,0 +1,57 @@
+/**
+ * Definition for ListNode
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param hashTable: A list of The first node of linked list
+     * @return: A list of The first node of linked list which have twice size
+     */    
+    public ListNode[] rehashing(ListNode[] hashTable) {
+        ArrayList<ListNode> nodes = new ArrayList<ListNode>();
+        for(int i = 0; i < hashTable.length; i ++){
+            ListNode cur = hashTable[i];
+            while(cur != null){
+                nodes.add(cur);
+                cur = cur.next;
+            }
+        }
+        
+        int newCapacity = hashTable.length * 2;
+        ListNode[] newHashTable = new ListNode[newCapacity];
+        for(int i = 0; i < nodes.size(); i ++){
+            ListNode cur = nodes.get(i);
+            int hashCode = hashcode(cur.val, newCapacity);
+            ListNode curNode = newHashTable[hashCode];
+            if(curNode == null){
+                newHashTable[hashCode] = new ListNode(cur.val);
+            } else {
+                while(curNode.next != null){
+                    curNode = curNode.next;
+                }
+                curNode.next = new ListNode(cur.val);
+            }
+        }
+        
+        return newHashTable;
+    }
+    
+    private int hashcode(int key, int capacity){
+        if(key >= 0){
+            return key % capacity;
+        } else {
+            return (key % capacity + capacity) % capacity;
+        }
+        
+    }
+};
+
+
+// 这题目很简单啊，第一次做一次AC。。
