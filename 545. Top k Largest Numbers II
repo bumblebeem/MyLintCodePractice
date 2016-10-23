@@ -1,0 +1,36 @@
+public class Solution {
+    PriorityQueue<Integer> minHeap;
+    int heapSize;
+    
+    public Solution(int k) {
+        minHeap = new PriorityQueue<Integer>(k);
+        heapSize = k;
+    }
+
+    public void add(int num) {
+        if(minHeap.size() < heapSize){
+            minHeap.add(num);
+        } else if (num > minHeap.peek()){
+            minHeap.poll();
+            minHeap.add(num);
+        }
+    }
+
+    public List<Integer> topk() {
+        List<Integer> res = new ArrayList<Integer>();
+        Iterator it = minHeap.iterator();
+        while(it.hasNext()){
+            res.add((Integer)it.next());
+        }
+        Collections.sort(res, new Comparator<Integer>(){
+            public int compare(Integer a, Integer b){
+                return b - a;
+            }
+        });
+        //Collections.sort(res, Collections.reverseOrder());
+        return res;
+    }
+};
+
+
+// 第一次写的时候忽略了第11、12行，不应该啊。。
