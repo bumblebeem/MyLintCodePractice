@@ -1,0 +1,29 @@
+class Solution {
+    public int[] topk(int[] nums, int k) {
+        int[] res = new int[k];
+        if(nums == null || nums.length == 0){
+            return res;
+        }
+        
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<Integer>(
+            k, new Comparator<Integer>(){
+                public int compare(Integer a, Integer b){
+                    return b - a;
+                }
+        });
+        
+        for(int e : nums){
+            maxHeap.add(e);
+        }
+        
+        for(int i = 0; i < k; i ++){
+            res[i] = maxHeap.poll();
+        }
+        return res;
+    }
+};
+
+
+// https://aaronice.gitbooks.io/lintcode/content/data_structure/top_k_largest_numbers.html
+// * 上边链接中的method 5是最难的,下边的链接是method 5的实现
+// http://www.jiuzhang.com/solutions/top-k-largest-numbers/
