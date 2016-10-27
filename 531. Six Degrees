@@ -50,5 +50,5 @@ public class Solution {
 
 // 这道题的标签是Microsoft啊，有点假。。
 
-// 和下边这个链接的做法不一样，它为什么要用HashMap不用HashSet呢
+// 和下边这个链接的做法不一样，它为什么要用HashMap不用HashSet呢。。感觉我的HashSet的解法更简洁啊！
 // https://aaronice.gitbooks.io/lintcode/content/graph_search/six_degrees.html
