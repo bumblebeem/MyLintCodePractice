@@ -1,5 +1,5 @@
-//431
-//1. 普通搜索
+// 431
+// 1. BFS(easy)
 /**
  * Definition for Undirected graph.
  * class UndirectedGraphNode {
@@ -14,44 +14,43 @@ public class Solution {
      * @return a connected set of a Undirected graph
      */
     public List<List<Integer>> connectedSet(ArrayList<UndirectedGraphNode> nodes) {
-        HashMap<UndirectedGraphNode, Boolean> visited = new HashMap<UndirectedGraphNode, Boolean>();
-        for(UndirectedGraphNode node : nodes){
-            visited.put(node, false);
-        }
-        
         List<List<Integer>> res = new ArrayList<List<Integer>>();
-        
+        if(nodes == null || nodes.size() == 0){
+            return res;
+        }
+        HashSet<UndirectedGraphNode> visited = new HashSet<UndirectedGraphNode>();
         for(UndirectedGraphNode node : nodes){
-            if(visited.get(node) == false){
-                bfs(node, res, visited);
+            if(!visited.contains(node)){
+                BFS(res, visited, node);
             }
         }
-        
         return res;
     }
     
-    public void bfs(UndirectedGraphNode node, List<List<Integer>> res, Map<UndirectedGraphNode, Boolean> visited){
-        ArrayList<Integer> connected_part = new ArrayList<Integer>();
+    private void BFS(List<List<Integer>> res, HashSet<UndirectedGraphNode> visited, UndirectedGraphNode node){
+        List<Integer> connectedComponent = new ArrayList<Integer>();
         Queue<UndirectedGraphNode> queue = new LinkedList<UndirectedGraphNode>();
+        visited.add(node);
         queue.add(node);
-        visited.put(node, true);
+        connectedComponent.add(node.label);
         while(!queue.isEmpty()){
             UndirectedGraphNode cur = queue.poll();
-            connected_part.add(cur.label);
-            for(UndirectedGraphNode neighbor : cur.neighbors){
-                if(visited.get(neighbor) == false){
-                    visited.put(neighbor, true);
-                    queue.add(neighbor);
+            ArrayList<UndirectedGraphNode> neighbors = cur.neighbors;
+            for(UndirectedGraphNode n : neighbors){
+                if(!visited.contains(n)){
+                    visited.add(n);
+                    queue.add(n);
+                    connectedComponent.add(n.label);
                 }
             }
         }
-        Collections.sort(connected_part);
-        res.add(connected_part);
+        Collections.sort(connectedComponent);
+        res.add(connectedComponent);
     }
 }
 
 
-//2. 并查集
+// 2. Union Find
 /**
  * Definition for Undirected graph.
  * class UndirectedGraphNode {
@@ -144,10 +143,10 @@ public class Solution {
 }
 
 
-//http://www.jiuzhang.com/solutions/find-the-connected-component-in-the-undirected-graph/
+// http://www.jiuzhang.com/solutions/find-the-connected-component-in-the-undirected-graph/
 
 
-//432
+// 432
 /**
  * Definition for Directed graph.
  * class DirectedGraphNode {
