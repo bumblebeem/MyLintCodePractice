@@ -1,0 +1,29 @@
+public class Solution {
+    public int mountainSequence(int[] nums) {
+        if (nums == null || nums.length == 0){
+            return -1;
+        }
+        int left = 0, right = nums.length - 1;
+        while (left + 1 < right){
+            int mid = (right - left) / 2 + left;
+            if (nums[mid] > nums[left] && nums[right] > nums[mid]){
+                left = mid;
+            } else if (nums[mid] > nums[right] && nums[left] > nums[mid]){
+                right = mid;
+            } else {
+                if (nums[mid + 1] > nums[mid]){
+                    left = mid;
+                } else {
+                    right = mid;
+                }
+            }
+        }
+        if (nums[left] > nums[right]){
+            return nums[left];
+        }
+        return nums[right];
+    }
+}
+
+
+// 自己AC了，不过分类讨论的情况想了一会儿，关键是想到13行else里边的两种情况。。
