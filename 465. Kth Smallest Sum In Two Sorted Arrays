@@ -53,7 +53,7 @@ public class Solution {
 //Mark助教回答如下：
 //这个问题主要是set在判断是否contains上出了问题
 //Pair A = new Pair(0, 0, 100);
-//Pair B = new Pair(0,0, 100);
+//Pair B = new Pair(0, 0, 100);
 //
 //A和 B 是两个不同的对象，那么A和B是不等的。
 //所以visited.add(A), 此时判断visited.contains(B) 显然是False的，所以数据被加重复了，visited没有起到想要的效果。
