@@ -1,0 +1,97 @@
+// My implementation:
+public class ThreeStacks {
+    int[] stacks;
+    int stack1;
+    int stack2;
+    int stack3;
+    int size;
+
+    public ThreeStacks(int size) {
+        // do intialization if necessary
+        stacks = new int[size * 5];
+        stack1 = 0;
+        stack2 = size;
+        stack3 = size * 2;
+        this.size = size;
+    }
+
+    public void push(int stackNum, int value) {
+        // Write your code here
+        // Push value into stackNum stack
+        if(stackNum == 0){
+            stacks[stack1] = value;
+            stack1 ++;
+        } else if(stackNum == 1){
+            stacks[stack2] = value;
+            stack2 ++;
+        } else{
+            stacks[stack3] = value;
+            stack3 ++;
+        }
+    }
+    
+    public int pop(int stackNum) {
+        // Write your code here
+        // Pop and return the top element from stackNum stack
+        if(stackNum == 0){
+            if(stack1 == 0){
+                return Integer.MIN_VALUE;
+            } else {
+                stack1 --;
+                return stacks[stack1];
+            }
+        } else if(stackNum == 1){
+            if(stack2 == size){
+                return Integer.MIN_VALUE;
+            } else {
+                stack2 --;
+                return stacks[stack2];
+            }
+        } else{
+            if(stack3 == size * 2){
+                return Integer.MIN_VALUE;
+            } else {
+                stack3 --;
+                return stacks[stack3];
+            }
+        }
+    }
+
+    public int peek(int stackNum) {
+        // Write your code here
+        // Return the top element
+        if(stackNum == 0){
+            if(stack1 == 0){
+                return Integer.MIN_VALUE;
+            } else {
+                return stacks[stack1 - 1];
+            }
+        } else if(stackNum == 1){
+            if(stack2 == size){
+                return Integer.MIN_VALUE;
+            } else {
+                return stacks[stack2 - 1];
+            }
+        } else{
+            if(stack3 == size * 2){
+                return Integer.MIN_VALUE;
+            } else {
+                return stacks[stack3 - 1];
+            }
+        }
+    }
+
+    public boolean isEmpty(int stackNum) {
+        // Write your code here
+        if(stackNum == 0){
+            return stack1 == 0;
+        } else if(stackNum == 1){
+            return stack2 == size;
+        } else{
+            return stack3 == size * 2;
+        }
+    }
+}
+
+
+// http://www.jiuzhang.com/solutions/implement-three-stacks-by-single-array/
