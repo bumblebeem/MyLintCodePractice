@@ -1,0 +1,37 @@
+public class Solution {
+    /**
+     * @param m the number of eggs
+     * @param n the umber of floors
+     * @return the number of drops in the worst case
+     */
+    public int dropEggs2(int m, int n) {
+        int[][] dp = new int[m + 1][n + 1];
+        
+        for(int i = 1; i <= m; i ++){
+            dp[i][0] = 0;
+            dp[i][1] = 1;
+        }
+        for(int i = 1; i <= n; i ++){
+            dp[0][i] = 0;
+            dp[1][i] = i;
+        }
+        
+        for(int i = 2; i <= m; i ++){
+            for(int j = 2; j <= n; j ++){
+                dp[i][j] = Integer.MAX_VALUE;
+                for(int k = 1; k <= j; k ++){
+                    int temp = 1 + Math.max(dp[i - 1][k - 1], dp[i][j - k]);
+                    dp[i][j] = Math.min(temp, dp[i][j]);
+                }
+            }
+        }
+        
+        return dp[m][n];
+    }
+}
+
+
+// 对于22行最里边一层循环的理解不是很好
+
+// geeksforgeeks里边对于dp方程的解释非常精辟！分为蛋碎了和蛋没碎来讨论就好~
+// http://www.geeksforgeeks.org/dynamic-programming-set-11-egg-dropping-puzzle/
