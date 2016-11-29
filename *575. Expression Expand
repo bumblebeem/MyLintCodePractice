@@ -1,0 +1,55 @@
+// 自己想到了正确的思路，然而debug了半天没有AC，还是抄袭了答案。。
+public class Solution {
+    /**
+     * @param s  an expression includes numbers, letters and brackets
+     * @return a string
+     */
+    public String expressionExpand(String s) {
+        Stack<String> str = new Stack<String>();
+        Stack<Integer> num = new Stack<Integer>();
+        int number = 0;
+        
+        for(char cur : s.toCharArray()){
+            if(Character.isDigit(cur)){
+                number = number * 10 + cur - '0';   //表示次数的数字有可能不是个位数
+            } else if(cur == '['){
+                str.push("[");
+                num.push(number);
+                number = 0;
+            } else if(cur == ']'){
+                Stack<String> helper = new Stack<String>();
+                while(!str.isEmpty()){
+                    String top = str.pop();
+                    if(top.equals("[")){
+                        StringBuilder sb = new StringBuilder();
+                        StringBuilder res = new StringBuilder();
+                        
+                        while(!helper.isEmpty()){
+                            sb.append(helper.pop());
+                        }
+                        
+                        int times = num.pop();
+                        for(int i = 0; i < times; i ++){
+                            res.append(sb.toString());
+                        }
+                        str.push(res.toString());
+                        break;
+                    }
+                    helper.push(top);
+                }
+            } else {
+                str.add(String.valueOf(cur));
+            }
+        }
+        
+        Stack<String> helper = new Stack<String>();
+        StringBuilder res = new StringBuilder();
+        while(!str.isEmpty()){
+            helper.push(str.pop());
+        }
+        while(!helper.isEmpty()){
+            res.append(helper.pop());
+        }
+        return res.toString();
+    }
+}
