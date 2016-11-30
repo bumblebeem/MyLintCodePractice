@@ -1,0 +1,43 @@
+// 和LeetCode的347思路一样，但是需要注意line34-36,因为这道题要求相同frequency的按照字母序输出，有可能相同frequency的只输出前几个
+// 而不是全部输出，所以这里需要判断并且break，否则有可能下标越界
+public class Solution {
+    /**
+     * @param words an array of string
+     * @param k an integer
+     * @return an array of string
+     */
+    public String[] topKFrequentWords(String[] words, int k) {
+        HashMap<String, Integer> fmap = new HashMap<String, Integer>();
+        for(String word : words){
+            if(fmap.containsKey(word)){
+                fmap.put(word, fmap.get(word) + 1);
+            } else {
+                fmap.put(word, 1);
+            }
+        }
+        
+        List<String>[] bucket = new List[words.length + 1];
+        for(Map.Entry<String, Integer> entry : fmap.entrySet()){
+            int freq = entry.getValue();
+            if(bucket[freq] == null){
+                bucket[freq] = new LinkedList<String>();
+            }
+            bucket[freq].add(entry.getKey());
+        }
+        
+        String[] res = new String[k];
+        for(int i = bucket.length - 1, j = 0; i > 0 && j < k; i --){
+            if(bucket[i] != null){
+                List<String> cur = bucket[i];
+                Collections.sort(cur);
+                for(String s : cur){
+                	if(j >= k){
+                		break;
+                	}
+                    res[j ++] = s;
+                }
+            }
+        }
+        return res;
+    }
+}
