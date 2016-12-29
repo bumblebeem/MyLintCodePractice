@@ -9,6 +9,8 @@
  *     }
  * }
  */
+ 
+// Solution one:
 public class Solution {
     /**
      * @param T1, T2: The roots of binary tree.
@@ -35,8 +37,52 @@ public class Solution {
     }
 }
 
-// Cracking the Coding Interview P266
+
+// Solution two:(这种方法理解的不好。。)
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param T1, T2: The roots of binary tree.
+     * @return: True if T2 is a subtree of T1, or false.
+     */
+    public boolean isSubtree(TreeNode T1, TreeNode T2) {
+        if(T2 == null){
+            return true;
+        }
+        return subtree(T1, T2);
+    }
+    
+    private boolean subtree(TreeNode T1, TreeNode T2){
+        if(T1 == null){
+            return false;
+        } else if(T1.val == T2.val && matchTree(T1, T2)){
+            return true;
+        }
+        return subtree(T1.left, T2) || subtree(T1.right, T2);
+    }
+    
+    private boolean matchTree(TreeNode T1, TreeNode T2){
+        if(T1 == null && T2 == null){
+            return true;
+        } else if(T1 == null || T2 == null){
+            return false;
+        } else if(T1.val != T2.val){
+            return false;
+        } else {
+            return matchTree(T1.left, T2.left) && matchTree(T1.right, T2.right);
+        }
+    }
+}
 
 
-// Another recursive solution:
-// http://www.jiuzhang.com/solutions/subtree/
+// Cracking the Coding Interview P266 - 267
