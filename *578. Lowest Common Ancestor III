@@ -1,0 +1,66 @@
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+class Result{
+    public TreeNode node;
+    public boolean isAncestor;
+    public Result(TreeNode node, boolean isAncestor){
+        this.node = node;
+        this.isAncestor = isAncestor;
+    }
+} 
+ 
+public class Solution {
+    /**
+     * @param root The root of the binary tree.
+     * @param A and B two nodes
+     * @return: Return the LCA of the two nodes.
+     */
+    public TreeNode lowestCommonAncestor3(TreeNode root, TreeNode A, TreeNode B) {
+        Result r = helper(root, A, B);
+        if(r.isAncestor){
+            return r.node;
+        }
+        return null;
+    }
+    
+    private Result helper(TreeNode root, TreeNode A, TreeNode B){
+        if(root == null){
+            return new Result(null, false);
+        }
+        
+        if(root == A && root == B){
+            return new Result(root, true);
+        }
+        
+        Result left = helper(root.left, A, B);
+        if(left.isAncestor){
+            return left;
+        }
+        
+        Result right = helper(root.right, A, B);
+        if(right.isAncestor){
+            return right;
+        }
+        
+        if(left.node != null && right.node != null){
+            return new Result(root, true);
+        } else if(root == A || root == B){
+            boolean isAncestor = left.node != null || right.node != null;
+            return new Result(root, isAncestor);
+        } else {
+            return new Result(left.node != null ? left.node : right.node, false);
+        }
+    }
+}
+
+
+// Refer to Cracking the Coding Interview P261
