@@ -1,0 +1,50 @@
+/**
+ * Definition of ParentTreeNode:
+ * 
+ * class ParentTreeNode {
+ *     public ParentTreeNode parent, left, right;
+ * }
+ */
+public class Solution {
+    /**
+     * @param root: The root of the tree
+     * @param A, B: Two node in the tree
+     * @return: The lowest common ancestor of A and B
+     */
+    public ParentTreeNode lowestCommonAncestorII(ParentTreeNode root,
+                                                 ParentTreeNode A,
+                                                 ParentTreeNode B) {
+        int heightA = getHeight(root, A);
+        int heightB = getHeight(root, B);
+        
+        ParentTreeNode curA = A;
+        ParentTreeNode curB = B;
+        
+        while(heightA > heightB){
+            heightA --;
+            curA = curA.parent;
+        }
+        while(heightB > heightA){
+            heightB --;
+            curB = curB.parent;
+        }
+        
+        while(curA != curB){
+            curA = curA.parent;
+            curB = curB.parent;
+        }
+        return curA;
+    }
+    
+    private int getHeight(ParentTreeNode root, ParentTreeNode node){
+        if(root == null){
+            return 0;
+        }
+        int height = 1;
+        while(node.parent != null){
+            height ++;
+            node = node.parent;
+        }
+        return height;
+    }
+}
