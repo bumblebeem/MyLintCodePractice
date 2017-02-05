@@ -27,7 +27,30 @@ class Solution {
     }
 }
 
-//注意15行，以及21和23的顺序不能颠倒。因为是求first position
+// 注意15行，以及21和23的顺序不能颠倒。因为是求first position
 
 
-//http://www.jiuzhang.com/solutions/first-position-of-target/
+// http://www.jiuzhang.com/solutions/first-position-of-target/
+
+
+// 再刷一次AC
+public int binarySearch(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+        while(left + 1 < right){
+            int mid = (right - left) / 2 + left;
+            if(nums[mid] > target){
+                right = mid;
+            } else if(nums[mid] < target){
+                left = mid;
+            } else {
+                right = mid;
+            }
+        }
+        if(nums[left] == target){
+            return left;
+        } else if(nums[right] == target){
+            return right;
+        }
+        return -1;
+    }
