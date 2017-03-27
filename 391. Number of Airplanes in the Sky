@@ -7,24 +7,14 @@
  *         this.end = end;
  *     }
  */
-class Point {
+class Point{
     int time;
-    int flag;
+    int type;   // 0 for taking off, 1 for landing，可以随意指定值
     
-    Point (int time, int flag){
+    Point(int time, int type){
         this.time = time;
-        this.flag = flag;
+        this.type = type;   
     }
-    
-    public static Comparator<Point> comparator = new Comparator<Point>(){
-        public int compare(Point p1, Point p2){
-            if(p1.time == p2.time){
-                return p1.flag - p2.flag;
-            } else {
-                return p1.time - p2.time;
-            }
-        }
-    };
 }
 
 class Solution {
@@ -33,27 +23,33 @@ class Solution {
      * @return: Count of airplanes are in the sky.
      */
     public int countOfAirplanes(List<Interval> airplanes) { 
-        int max = 0;
-        ArrayList<Point> helper = new ArrayList<Point>();
-        for(Interval i : airplanes){
-            helper.add(new Point(i.start, 2));
-            helper.add(new Point(i.end, 1));
+        List<Point> points = new ArrayList<Point>();
+        for(int i = 0; i < airplanes.size(); i ++){
+            points.add(new Point(airplanes.get(i).start, 0));
+            points.add(new Point(airplanes.get(i).end, 1));
         }
         
-        Collections.sort(helper, Point.comparator);
+        Collections.sort(points, new Comparator<Point>(){
+            public int compare(Point a, Point b){
+                if(a.time != b.time){
+                    return a.time - b.time;
+                } else {
+                    return b.type - a.type;     // 因为题目中说taking off和landing时间重合的话，先landing，所以这样排序
+                }
+            }
+        });
+        
+        int max = 0;
         int count = 0;
-        for(Point p : helper){
-            if(p.flag == 2){
+        for(int i = 0; i < points.size(); i ++){
+            if(points.get(i).type == 0){
                 count ++;
-            } else if(p.flag == 1){
+                max = Math.max(count, max);
+            }
+            if(points.get(i).type == 1){
                 count --;
             }
-            max = Math.max(max, count);
         }
-        
         return max;
     }
 }
-
-
-//注意如何根据需求override Java的Comparator，没太明白为什么20行必须要加上public才行。。
